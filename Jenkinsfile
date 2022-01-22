@@ -1,23 +1,36 @@
 pipeline {
-    agent {
-        label 'docker'
+    environment {
+        registry = "corefinder/capstoneProject3"
+        registryCredential = '<dockerhub_id>'
+        dockerImage = ''
     }
+    agent any
     stages {
-        stage('Build application') {
+        stage('Test code'):{
+          steps {
+            sh "pip install pre-commit"
+            sh "pre-commit run --all-files"
+          }
+        }
+        stage('Build image') {
             steps {
                 script {
-                    dockerImage = /usr/local/bin/docker.build "corefinder/petclinic:$BUILD_NUMBER"
+                    dockerImage = docker.build corefinder/capstoneProject3 + ":$BUILD_NUMBER"
                 }
             }
         }
-        stage('Deploy image to docker') {
+        stage('Deploy image') {
             steps {
                 script {
-                    // Assume the Docker Hub registry by passing an empty string as the first parameter
-                    /usr/local/bin/docker.withRegistry('' , 'dockerhub') {
+                    docker.withRegistry('corefinder/capstoneproject3', registryCredential) {
                         dockerImage.push()
                     }
                 }
+            }
+        }
+        stage('Cleaning up') {
+            steps {
+                sh "docker rmi $registry:$BUILD_NUMBER"
             }
         }
     }
