@@ -6,7 +6,7 @@ pipeline {
         stage('Build application') {
             steps {
                 script {
-                    dockerImage = docker.build "corefinder/petclinic:$BUILD_NUMBER"
+                    dockerImage = /usr/local/bin/docker.build "corefinder/petclinic:$BUILD_NUMBER"
                 }
             }
         }
@@ -14,7 +14,7 @@ pipeline {
             steps {
                 script {
                     // Assume the Docker Hub registry by passing an empty string as the first parameter
-                    docker.withRegistry('' , 'dockerhub') {
+                    /usr/local/bin/docker.withRegistry('' , 'dockerhub') {
                         dockerImage.push()
                     }
                 }
