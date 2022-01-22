@@ -11,6 +11,9 @@ pipeline {
             }
         }
         stage('Test application') {
+            agent {
+                label 'docker'
+            }
             steps {
                 script {
                     dockerImage = docker.build "corefinder/capstoneproject:$BUILD_NUMBER"
@@ -18,6 +21,9 @@ pipeline {
             }
         }
         stage('Deploy image to docker') {
+            agent {
+                label 'docker'
+            }
             steps {
                 script {
                     // Assume the Docker Hub registry by passing an empty string as the first parameter
