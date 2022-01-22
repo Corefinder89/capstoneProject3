@@ -1,13 +1,10 @@
 version: "3.8"
 
 services:
-  test:
-    build: .
-    command: "python manage.py test"
   web:
     build: .
-    # command: "python manage.py runserver 0.0.0.0:8000"
     volumes:
       - /var/capstoneproject
-    ports:
-      - "8000:8000"
+  test:
+    build: .
+    command: "pre-commit run --all-files"
